@@ -9,6 +9,7 @@ import math
 
 
 class Discount:
+    
     @staticmethod
     def principal_discount(principal, rate, expiration):
         discount = principal *  math.exp(-rate * expiration)

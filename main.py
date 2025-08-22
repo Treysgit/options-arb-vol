@@ -17,12 +17,13 @@ def main():
     q = float(input("q: "))
     r = float(input("r: "))
 
-    # Discount stock to present value - i.e. the value of not being the holder during the dividend period
-    s_disc = discount.Discount.stock_discount(s, q, t)
+    # Discount stock at expiration to present value - i.e. the value of not being the holder during the dividend period
+    s_disc = discount.Discount.principal_discount(s, q, t)
 
-    k_disc = discount
+    # Discount strike at expiration to present value - i.e. the value that can grow to the full amount at expiration via risk-free rate instrument
+    k_disc = discount.Discount.principal_discount(k, r, t)
 
-    variables = {s_disc, p, c, k, t}
+    parity_params = {s_disc, p, c, k_disc}
 
 
 if __name__ == "__main__":
