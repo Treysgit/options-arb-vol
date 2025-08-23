@@ -12,15 +12,18 @@ class Arbitrage:
 
         # Check for arbitrage opportunity
         if diff >= min_diff:
-            print(f"Sell side: stock and put.\nShort the stock by selling now +${s_disc}, write and sell put +${p}.\n"
-                  f"Buy side: call and bond.\nBuy the call -${c}, invest in the bond (PV of strike) -${k_disc}\n"
-                  f"Locked in arbitrage: {s_disc} + {p} - {c} - {k_disc} = +${diff}")
+            print("\n" + "_" * 40 + "\n")
+            print(f"Sell side: stock and put\nShort the stock by selling now +${s_disc:.2f}, write and sell put +${p:.2f}\n"
+                  f"\nBuy side: call and bond.\nBuy the call -${c:.2f}, invest in the bond (PV of strike) -${k_disc:.2f}\n"
+                  f"\nLocked in arbitrage: {s_disc:.2f} + {p:.2f} - {c:.2f} - {k_disc:.2f} = +${diff:.2f}")
             
         elif diff <= -min_diff:
-            print(f"Sell side: call and bond.\nSell bond (PV of strike) +${k_disc}, write and sell call +${c}.\n"
-                  f"Buy side: stock and put.\nBuy the stock -${s_disc}, buy the put -${p}\n"
-                  f"Locked in arbitrage: {c} + {k_disc} - {s_disc} - {p} = +${-diff}")
+            print("\n" + "_" * 40 + "\n")
+            print(f"Sell side: call and bond\nSell bond (PV of strike) +${k_disc:.2f}, write and sell call +${c:.2f}.\n"
+                  f"\nBuy side: stock and put.\nBuy the stock -${s_disc:.2f}, buy the put -${p:.2f}\n"
+                  f"\nLocked in arbitrage: {c:.2f} + {k_disc:.2f} - {s_disc:.2f} - {p:.2f} = +${-diff:.2f}")
         else:
+            print("\n" + "_" * 40 + "\n")
             print(f"The same payoff relationship holds between the variables, leaving no put-call parity arbitrage opportunity.")
 
     @staticmethod

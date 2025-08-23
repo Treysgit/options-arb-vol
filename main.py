@@ -1,11 +1,18 @@
 import discount
 import arbitrage
+import sys
+import strategy
+
+'''Note - We presuppose that the options are European when using put-call 
+parity, long straddle, and implied volatility - meaning the options
+of the underlying assets can only be exercised at expiration.'''
 
 def main():
-    print("This program checks for put-call parity arbitrage.\n"
-    "Enter the prices for the stock, put, call, "
-    "strike (shared), time to expiration (shared),\n" 
-    "dividend yield, and risk-free rate."
+    print("This program checks for put-call parity arbitrage, long straddle\n strategy,"
+          " and returns implied volatility of the call option.\n"
+          "\nEnter the prices for the stock, put, call, "
+          "strike (shared), time to expiration (shared),\n" 
+          "dividend yield, and risk-free rate."
     )
 
     # Receive stock, put, call, strike, expiration, dividend yield, 
@@ -14,7 +21,7 @@ def main():
     p = float(input("P: "))
     c = float(input("C: "))
     k = float(input("K: "))
-    t = float(input("T: "))
+    t = float(input("T (years): "))
     q = float(input("q: "))
     r = float(input("r: "))
     flag = str(input("Do you want to enter a minimum difference "
@@ -30,7 +37,20 @@ def main():
     # Discount strike at expiration to present value - i.e. the value that can grow to the full amount at expiration via risk-free rate instrument
     k_disc = discount.Discount.principal_discount(k, r, t) 
 
+    # Run put-call arbitrage test and print result to the user
     arbitrage.Arbitrage.put_call_parity(s_disc, p, c, k_disc, min_diff)
+
+    print("\n" + "_" * 40 + "\n")
+    flag = str(input("Do you want to run a long straddle strategy (y/n)? "))
+    if flag != "y" and flag != "Y":
+        sys.exit()
+
+    strategy.Strategy.long_straddle(c, p, t, k)
+
+    
+    
+
+
 
 
 
