@@ -9,7 +9,7 @@ of the underlying assets can only be exercised at expiration.'''
 
 def main():
     print("This program checks for put-call parity arbitrage, long straddle\n strategy,"
-          " and returns implied volatility of the call option.\n"
+          " and returns implied volatility of the call/put option.\n"
           "\nEnter the prices for the stock, put, call, "
           "strike (shared), time to expiration (shared),\n" 
           "dividend yield, and risk-free rate."
@@ -45,7 +45,10 @@ def main():
     if flag != "y" and flag != "Y":
         sys.exit()
 
+    # Run long straddle strategy
     strategy.Strategy.long_straddle(c, p, t, k)
+
+
 
     
     
