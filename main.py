@@ -48,6 +48,8 @@ def main():
     # Run long straddle strategy
     strategy.Strategy.long_straddle(c, p, t, k)
 
+    # Return implied volatility 
+
 
 
     
