@@ -3,33 +3,63 @@ import math
 
 class Volatility:
 
+    # Calculates implied volatility of underlying stock
     @staticmethod
     def implied_vol(s, k, t, r, c, s_disc, k_disc):
 
         '''We must calculate the min and max of the possible
-        implied volatlity values'''
+        implied volatlity values to employ a binary search'''
 
-        # Call bounds
+        # Call option bounds
         '''With no market uncertainty (vol = 0), the call price just 
         becomes the value of S(PV) - K(PV)'''
-        vol_lo = max(s_disc - k_disc, 0)
+        intrin_lo = max(s_disc - k_disc, 0)
         '''With max market uncertanty (vol --> infinity), the call price becomes
         the value of S(PV) but never exceeds'''
-        vol_hi = s_disc
+        asym_hi = s_disc
 
         # Input validation - market inconsistency
-        if c < vol_lo or c > vol_hi:
+        if c < intrin_lo or c >= asym_hi:
             sys.exit("No valid implied volatlity due to market incosistency")
 
+        vol_lo = 0.0
+        vol_hi = 1.0 # Conservative guess
+        call_guess = Volatility.black_scholes_call(s, k, t, r, vol_hi, s_disc, k_disc) # Get call price at vol_hi
+        vol_cap = 10.0 # Improbable cap
+
+        # Increase vol_hi until its call price is greater than or equal to market call price
+        while call_guess < c:
+            vol_hi *= 2
+            call_guess = Volatility.black_scholes_call(s, k, t, r, vol_hi, s_disc, k_disc) # Get call price at vol_hi
+
+            # Sanity check
+            if vol_hi > vol_cap:
+                sys.exit("Implied volatility is improbably high - input error likely")
+
         # IL < C < AH
-        # 1e-6 or 1/10^6 is our minimum difference in call price to accept the implied volatlity estimate
+        # 1e-6 or 1/10^6 is our minimum difference in call price (market and estimate) to accept the implied volatlity estimate
         tol = 1e-6
         sigma = (vol_hi + vol_lo) / 2 # First guess is just the midpoint
-        c_est = Volatility.black_scholes_call(s, k, r, sigma, s_disc, k_disc)
-        
 
+        # Binary search to find implied volatlilty 
+        while vol_hi - vol_lo > tol:
+            sigma = (vol_hi + vol_lo) / 2 # Midpoint estimate
+            call_guess = Volatility.black_scholes_call(s, k, t, r, sigma, s_disc, k_disc)
 
+            # Increase call_est to call by increasing vol.
+            # We shift up lower vol bound to midpoint (sigma)
+            if call_guess < c : 
+                vol_lo = sigma
 
+            # Decrease call_est to call by decreasing vol.
+            # We shift down upper vol bound to midpoint (sigma)
+            else:
+                vol_hi = sigma 
+            
+        return sigma
+            
+
+    # Calculates a call option price using the Black-Scholes model
     @staticmethod
     def black_scholes_call(s, k, t, r, sigma, s_disc, k_disc):
         # Edge cases - sigma = 0 instrinsic low, t = 0 option is exercised now

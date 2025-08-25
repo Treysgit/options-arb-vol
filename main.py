@@ -2,6 +2,7 @@ import discount
 import arbitrage
 import sys
 import strategy
+import volatility
 
 '''Note - We presuppose that the options are European when using put-call 
 parity, long straddle, and implied volatility - meaning the options
@@ -9,7 +10,7 @@ of the underlying assets can only be exercised at expiration.'''
 
 def main():
     print("This program checks for put-call parity arbitrage, long straddle\n strategy,"
-          " and returns implied volatility of the call/put option.\n"
+          " and also returns the implied volatility of the underlying asset.\n"
           "\nEnter the prices for the stock, put, call, "
           "strike (shared), time to expiration (shared),\n" 
           "dividend yield, and risk-free rate."
@@ -17,17 +18,17 @@ def main():
 
     # Receive stock, put, call, strike, expiration, dividend yield, 
     # and risk-free rate values from user
-    s = float(input("S: "))
-    p = float(input("P: "))
-    c = float(input("C: "))
-    k = float(input("K: "))
-    t = float(input("T (years): "))
-    q = float(input("q: "))
-    r = float(input("r: "))
+    s = abs(float(input("S: "))) # stock price
+    p = abs(float(input("P: "))) # put premium
+    c = abs(float(input("C: "))) # call premium
+    k = abs(float(input("K: "))) # strike price
+    t = abs(float(input("T (years): "))) # time to expiration
+    q = abs(float(input("q: "))) # dividend yield
+    r = abs(float(input("r: "))) # risk-free rate
     flag = str(input("Do you want to enter a minimum difference "
                        "for the put-call parity check (y/n): "))
-    if flag == "y" or flag == "Y":
-        min_diff = float(input("Enter minimum difference: "))
+    if flag.lower() == "y":
+        min_diff = abs(float(input("Enter minimum difference: ")))
     else:
         min_diff = 0.15 # default
 
@@ -42,21 +43,19 @@ def main():
 
     print("\n" + "_" * 40 + "\n")
     flag = str(input("Do you want to run a long straddle strategy (y/n)? "))
-    if flag != "y" and flag != "Y":
+    if flag.lower() != "y":
         sys.exit()
 
-    # Run long straddle strategy
+    # Run long straddle strategy and print result to user
     strategy.Strategy.long_straddle(c, p, t, k)
 
+    print("\n" + "_" * 40 + "\n")
     # Return implied volatility 
-
-
-
-    
-    
-
-
-
+    flag = str(input("\nDo you want to calculate the implied volitility (y/n)? "))
+    if flag.lower() != "y":
+        sys.exit()
+    imp_vol = volatility.Volatility.implied_vol(s, k, t, r, c, s_disc, k_disc)
+    print(f"The implied volatility of the underlying asset (S = {s}): {imp_vol:.2f}")
 
 
 
