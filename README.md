@@ -1,3 +1,3 @@
 ## Application Demonstration
 
-[![Demo Preview](options-arb-vol-demo.gif)](options-arb-vol-demo.mp4)
+[▶ Watch the demo (MP4)](options-arb-vol-demo.mp4)
