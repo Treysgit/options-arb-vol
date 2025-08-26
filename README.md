@@ -1,3 +1,3 @@
 ## Application Demonstration
 
-[▶ Watch the demo (MP4)](options-arb-vol-demo.mp4)
+https://github.com/Treysgit/options-arb-vol/raw/main/options-arb-vol-demo.mp4
